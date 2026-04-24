@@ -1,67 +1,71 @@
-class CargoSafetyException extends RuntimeException {
-    public CargoSafetyException(String message) {
-        super(message);
-    }
-}
+import java.util.Scanner;
 
-class GoodsBogie {
-    private String shape;
-    private String cargo;
+public class TrainConsistManagementApp {
 
-    public GoodsBogie(String shape) {
-        this.shape = shape;
-    }
 
-    public String getShape() {
-        return shape;
-    }
+    public static void bubbleSort(int[] capacities) {
+        int n = capacities.length;
 
-    public String getCargo() {
-        return cargo;
-    }
 
-    public void assignCargo(String cargo) {
-        try {
-            // Safety rule: Rectangular bogie cannot carry Petroleum
-            if (shape.equals("Rectangular") && cargo.equals("Petroleum")) {
-                throw new CargoSafetyException(
-                        "Unsafe Assignment: Rectangular bogie cannot carry Petroleum"
-                );
+        for (int i = 0; i < n - 1; i++) {
+
+
+            for (int j = 0; j < n - i - 1; j++) {
+
+
+                if (capacities[j] > capacities[j + 1]) {
+
+
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                }
             }
-
-            this.cargo = cargo;
-            System.out.println("Cargo assigned successfully: " + cargo + " to " + shape + " bogie");
-
-        } catch (CargoSafetyException e) {
-            System.out.println("Exception Caught: " + e.getMessage());
-
-        } finally {
-            System.out.println("Cargo assignment process completed for " + shape + " bogie\n");
         }
     }
 
-    @Override
-    public String toString() {
-        return shape + " Bogie carrying " + (cargo != null ? cargo : "No Cargo");
-    }
-}
 
-public class TrainConsistManagement {
+    public static void printArray(int[] arr) {
+        for (int val : arr) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+    }
+
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        GoodsBogie b1 = new GoodsBogie("Cylindrical");
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        System.out.println("=== Train Consist Management App (UC16 - Bubble Sort) ===");
 
-        // Safe assignment
-        b1.assignCargo("Petroleum");
+        try {
 
-        // Unsafe assignment (will trigger exception)
-        b2.assignCargo("Petroleum");
+            System.out.print("Enter number of passenger bogies: ");
+            int n = Integer.parseInt(scanner.nextLine());
 
-        // Program continues normally
-        System.out.println("Final State:");
-        System.out.println(b1);
-        System.out.println(b2);
+            int[] capacities = new int[n];
+
+
+            System.out.println("Enter capacities:");
+            for (int i = 0; i < n; i++) {
+                capacities[i] = Integer.parseInt(scanner.nextLine());
+            }
+
+
+            System.out.print("\nOriginal capacities: ");
+            printArray(capacities);
+
+            bubbleSort(capacities);
+
+
+            System.out.print("Sorted capacities: ");
+            printArray(capacities);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter numeric values only.");
+        } finally {
+            scanner.close();
+            System.out.println("\n🚆 Sorting operation completed.");
+        }
     }
 }

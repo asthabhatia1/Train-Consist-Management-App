@@ -33,25 +33,19 @@ public class TrainConsistManagement {
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 70));
         bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("Sleeper", 70));
 
-        // Step 2: Display original list
-        System.out.println("All Bogies:");
+        // Step 2: Display bogies
+        System.out.println("Bogies in Train:");
         bogies.forEach(System.out::println);
 
-        // Step 3: Group bogies by type (name)
-        Map<String, List<Bogie>> groupedBogies = bogies.stream()
-                .collect(Collectors.groupingBy(Bogie::getName));
+        // Step 3: Aggregate total capacity using map + reduce
+        int totalSeats = bogies.stream()
+                .map(b -> b.getCapacity())   // Extract capacity
+                .reduce(0, Integer::sum);   // Sum all values
 
-        // Step 4: Display grouped result
-        System.out.println("\nGrouped Bogies by Type:");
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-            System.out.println(entry.getKey() + ":");
-            for (Bogie b : entry.getValue()) {
-                System.out.println("  " + b);
-            }
-        }
+        // Step 4: Display total seating capacity
+        System.out.println("\nTotal Seating Capacity: " + totalSeats);
     }
 }

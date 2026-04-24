@@ -1,51 +1,43 @@
-import java.util.*;
-import java.util.stream.Collectors;
-
-// Bogie class
-class Bogie {
-    private String name;
-    private int capacity;
-
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + capacity + ")";
-    }
-}
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class TrainConsistManagement {
 
+    // Regex patterns
+    private static final String TRAIN_ID_PATTERN = "TRN-\\d{4}";
+    private static final String CARGO_CODE_PATTERN = "[A-Z]{3}-\\d{3}";
+
+    // Validate Train ID
+    public static boolean validateTrainId(String trainId) {
+        Pattern pattern = Pattern.compile(TRAIN_ID_PATTERN);
+        Matcher matcher = pattern.matcher(trainId);
+        return matcher.matches();
+    }
+
+    // Validate Cargo Code
+    public static boolean validateCargoCode(String cargoCode) {
+        Pattern pattern = Pattern.compile(CARGO_CODE_PATTERN);
+        Matcher matcher = pattern.matcher(cargoCode);
+        return matcher.matches();
+    }
+
     public static void main(String[] args) {
 
-        // Step 1: Create list of bogies
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Sleeper", 70));
+        // Sample inputs
+        String trainId1 = "TRN-1234";
+        String trainId2 = "TRAIN12";
 
-        // Step 2: Display bogies
-        System.out.println("Bogies in Train:");
-        bogies.forEach(System.out::println);
+        String cargoCode1 = "CMT-456";
+        String cargoCode2 = "cm-45A";
 
-        // Step 3: Aggregate total capacity using map + reduce
-        int totalSeats = bogies.stream()
-                .map(b -> b.getCapacity())   // Extract capacity
-                .reduce(0, Integer::sum);   // Sum all values
+        // Train ID validation
+        System.out.println("Train ID Validation:");
+        System.out.println(trainId1 + " -> " + validateTrainId(trainId1));
+        System.out.println(trainId2 + " -> " + validateTrainId(trainId2));
 
-        // Step 4: Display total seating capacity
-        System.out.println("\nTotal Seating Capacity: " + totalSeats);
+        // Cargo Code validation
+        System.out.println("\nCargo Code Validation:");
+        System.out.println(cargoCode1 + " -> " + validateCargoCode(cargoCode1));
+        System.out.println(cargoCode2 + " -> " + validateCargoCode(cargoCode2));
     }
 }

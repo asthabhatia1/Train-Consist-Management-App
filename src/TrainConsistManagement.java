@@ -1,43 +1,54 @@
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.*;
+import java.util.function.Predicate;
+
+class GoodsBogie {
+    private String shape;   // Rectangular / Cylindrical
+    private String cargo;   // Coal / Petroleum / etc.
+
+    public GoodsBogie(String shape, String cargo) {
+        this.shape = shape;
+        this.cargo = cargo;
+    }
+
+    public String getShape() {
+        return shape;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    @Override
+    public String toString() {
+        return shape + " Bogie carrying " + cargo;
+    }
+}
 
 public class TrainConsistManagement {
 
-    // Regex patterns
-    private static final String TRAIN_ID_PATTERN = "TRN-\\d{4}";
-    private static final String CARGO_CODE_PATTERN = "[A-Z]{3}-\\d{3}";
-
-    // Validate Train ID
-    public static boolean validateTrainId(String trainId) {
-        Pattern pattern = Pattern.compile(TRAIN_ID_PATTERN);
-        Matcher matcher = pattern.matcher(trainId);
-        return matcher.matches();
-    }
-
-    // Validate Cargo Code
-    public static boolean validateCargoCode(String cargoCode) {
-        Pattern pattern = Pattern.compile(CARGO_CODE_PATTERN);
-        Matcher matcher = pattern.matcher(cargoCode);
-        return matcher.matches();
-    }
-
     public static void main(String[] args) {
 
-        // Sample inputs
-        String trainId1 = "TRN-1234";
-        String trainId2 = "TRAIN12";
+        // Step 1: Create goods bogies
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new GoodsBogie("Cylindrical", "Coal"));        // ❌ unsafe
+        bogies.add(new GoodsBogie("Rectangular", "Coal"));
+        bogies.add(new GoodsBogie("Rectangular", "Steel"));
 
-        String cargoCode1 = "CMT-456";
-        String cargoCode2 = "cm-45A";
+        // Step 2: Safety rule using Predicate (functional interface)
+        Predicate<GoodsBogie> safetyRule = b ->
+                !(b.getShape().equals("Cylindrical") && !b.getCargo().equals("Petroleum"));
 
-        // Train ID validation
-        System.out.println("Train ID Validation:");
-        System.out.println(trainId1 + " -> " + validateTrainId(trainId1));
-        System.out.println(trainId2 + " -> " + validateTrainId(trainId2));
+        // Step 3: Apply safety filter using Stream
+        List<GoodsBogie> safeBogies = bogies.stream()
+                .filter(safetyRule)
+                .toList();
 
-        // Cargo Code validation
-        System.out.println("\nCargo Code Validation:");
-        System.out.println(cargoCode1 + " -> " + validateCargoCode(cargoCode1));
-        System.out.println(cargoCode2 + " -> " + validateCargoCode(cargoCode2));
+        // Step 4: Display results
+        System.out.println("All Goods Bogies:");
+        bogies.forEach(System.out::println);
+
+        System.out.println("\nSafe Compliant Bogies:");
+        safeBogies.forEach(System.out::println);
     }
 }
